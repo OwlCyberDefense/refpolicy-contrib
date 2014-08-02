@@ -36,4 +36,6 @@ interface(`dkim_admin',`
 
 	files_search_pids($1)
 	admin_pattern($1, dkim_milter_data_t)
+	
+	dev_read_rand(dkim_milter_t)
 ')
