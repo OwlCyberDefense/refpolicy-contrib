@@ -1,0 +1,9 @@
+/etc/acpi(/.*)?					gen_context(system_u:object_r:acpid_conf_t,s0)
+
+/etc/rc\.d/init\.d/acpid		--	gen_context(system_u:object_r:acpid_initrc_exec_t,s0)
+
+/run/acpid\..*					gen_context(system_u:object_r:acpid_runtime_t,s0)
+
+/usr/lib/systemd/system/acpid\..*	--	gen_context(system_u:object_r:acpid_unit_t,s0)
+
+/usr/sbin/acpid				--	gen_context(system_u:object_r:acpid_exec_t,s0)

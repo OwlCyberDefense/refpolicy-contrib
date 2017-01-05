@@ -1,0 +1,50 @@
+policy_module(acpid, 0.0.1)
+
+########################################
+#
+# Declarations
+#
+
+attribute_role acpid_roles;
+
+type acpid_t;
+type acpid_exec_t;
+init_daemon_domain(acpid_t, acpid_exec_t)
+role acpid_roles types acpid_t;
+
+type acpid_conf_t;
+files_config_file(acpid_conf_t)
+
+type acpid_initrc_exec_t;
+init_script_file(acpid_initrc_exec_t)
+
+type acpid_unit_t;
+init_unit_file(acpid_unit_t)
+
+type acpid_runtime_t;
+files_pid_file(acpid_runtime_t)
+
+########################################
+#
+# Daemon local policy
+#
+
+allow acpid_t self:netlink_generic_socket { bind create getattr read setopt write };
+
+allow acpid_t acpid_conf_t:dir list_dir_perms;
+allow acpid_t acpid_conf_t:file read_file_perms;
+
+allow acpid_t acpid_runtime_t:file { create_file_perms unlink write };
+files_pid_filetrans(acpid_t, acpid_runtime_t, file)
+
+dev_read_input(acpid_t)
+
+files_read_etc_symlinks(acpid_t)
+files_search_pids(acpid_t)
+files_search_var(acpid_t)
+
+init_rw_script_stream_sockets(acpid_t)
+
+logging_send_syslog_msg(acpid_t)
+
+miscfiles_read_localization(acpid_t)

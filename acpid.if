@@ -1,0 +1,83 @@
+## <summary>Advanced Configuration and Power Interface event daemon.</summary>
+
+########################################
+## <summary>
+##	Execute a domain transition to run acpid.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed to transition.
+##	</summary>
+## </param>
+#
+interface(`acpid_domtrans',`
+	gen_require(`
+		type acpid_t, acpid_exec_t;
+	')
+
+	corecmd_search_bin($1)
+	domtrans_pattern($1, acpid_exec_t, acpid_t)
+')
+
+########################################
+## <summary>
+##	Execute acpid in the acpid domain,
+##	and allow the specified role
+##	the acpid domain.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed to transition.
+##	</summary>
+## </param>
+## <param name="role">
+##	<summary>
+##	Role allowed access.
+##	</summary>
+## </param>
+#
+interface(`acpid_run',`
+	gen_require(`
+		attribute_role acpid_roles;
+	')
+
+	acpid_domtrans($1)
+	roleattribute $2 acpid_roles;
+')
+
+########################################
+## <summary>
+##	All of the rules required to
+##	administrate an acpid environment.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+## <param name="role">
+##	<summary>
+##	Role allowed access.
+##	</summary>
+## </param>
+## <rolecap/>
+#
+interface(`acpid_admin',`
+	gen_require(`
+		type acpid_t, acpid_conf_t, acpid_initrc_exec_t;
+		type acpid_runtime_t, acpid_unit_t;
+	')
+
+	allow $1 acpid_t:process { ptrace signal_perms };
+	ps_process_pattern($1, acpid_t)
+
+	init_startstop_service($1, $2, acpid_t, acpid_initrc_exec_t, acpid_unit_t)
+
+	files_search_etc($1)
+	admin_pattern($1, acpid_conf_t)
+
+	files_search_pids($1)
+	admin_pattern($1, acpid_runtime_t)
+
+	acpid_run($1, $2)
+')
