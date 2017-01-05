@@ -1,0 +1,33 @@
+## <summary>automated software based fan speed regulation.</summary>
+
+########################################
+## <summary>
+##	All of the rules required to
+##	administrate an fancontrol environment.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+## <param name="role">
+##	<summary>
+##	Role allowed access.
+##	</summary>
+## </param>
+## <rolecap/>
+#
+interface(`fancontrol_admin',`
+	gen_require(`
+		type fancontrol_t, fancontrol_initrc_exec_t;
+		type fancontrol_pid_t, fancontrol_unit_t;
+	')
+
+	allow $1 fancontrol_t:process { ptrace signal_perms };
+	ps_process_pattern($1, fancontrol_t)
+
+	init_startstop_service($1, $2, fancontrol_t, fancontrol_initrc_exec_t, fancontrol_unit_t)
+
+	files_search_pids($1)
+	admin_pattern($1, fancontrol_pid_t)
+')
