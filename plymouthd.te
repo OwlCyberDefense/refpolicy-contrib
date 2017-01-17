@@ -13,6 +13,10 @@ type plymouthd_t;
 type plymouthd_exec_t;
 init_daemon_domain(plymouthd_t, plymouthd_exec_t)
 
+type plymouthd_runtime_t;
+typealias plymouthd_runtime_t alias plymouthd_var_run_t;
+files_pid_file(plymouthd_runtime_t)
+
 type plymouthd_spool_t;
 files_type(plymouthd_spool_t)
 
@@ -24,9 +28,6 @@ files_type(plymouthd_var_lib_t)
 
 type plymouthd_var_log_t;
 logging_log_file(plymouthd_var_log_t)
-
-type plymouthd_var_run_t;
-files_pid_file(plymouthd_var_run_t)
 
 ########################################
 #
@@ -40,14 +41,16 @@ allow plymouthd_t self:process { signal getsched };
 allow plymouthd_t self:fifo_file rw_fifo_file_perms;
 allow plymouthd_t self:unix_stream_socket create_stream_socket_perms;
 
+manage_dirs_pattern(plymouthd_t, plymouthd_runtime_t, plymouthd_runtime_t)
+manage_files_pattern(plymouthd_t, plymouthd_runtime_t, plymouthd_runtime_t)
+files_pid_filetrans(plymouthd_t, plymouthd_runtime_t, { file dir })
+
 manage_dirs_pattern(plymouthd_t, plymouthd_spool_t, plymouthd_spool_t)
 manage_files_pattern(plymouthd_t, plymouthd_spool_t, plymouthd_spool_t)
 manage_sock_files_pattern(plymouthd_t, plymouthd_spool_t, plymouthd_spool_t)
-files_spool_filetrans(plymouthd_t, plymouthd_spool_t, { file dir sock_file })
 
 manage_dirs_pattern(plymouthd_t, plymouthd_var_lib_t, plymouthd_var_lib_t)
 manage_files_pattern(plymouthd_t, plymouthd_var_lib_t, plymouthd_var_lib_t)
-files_var_lib_filetrans(plymouthd_t, plymouthd_var_lib_t, { file dir })
 
 manage_dirs_pattern(plymouthd_t, plymouthd_var_log_t, plymouthd_var_log_t)
 append_files_pattern(plymouthd_t, plymouthd_var_log_t, plymouthd_var_log_t)
@@ -55,25 +58,23 @@ create_files_pattern(plymouthd_t, plymouthd_var_log_t, plymouthd_var_log_t)
 setattr_files_pattern(plymouthd_t, plymouthd_var_log_t, plymouthd_var_log_t)
 logging_log_filetrans(plymouthd_t, plymouthd_var_log_t, { file dir })
 
-manage_dirs_pattern(plymouthd_t, plymouthd_var_run_t, plymouthd_var_run_t)
-manage_files_pattern(plymouthd_t, plymouthd_var_run_t, plymouthd_var_run_t)
-files_pid_filetrans(plymouthd_t, plymouthd_var_run_t, { file dir })
-
+kernel_change_ring_buffer_level(plymouthd_t)
 kernel_read_system_state(plymouthd_t)
 kernel_request_load_module(plymouthd_t)
-kernel_change_ring_buffer_level(plymouthd_t)
 
-dev_rw_dri(plymouthd_t)
-dev_read_sysfs(plymouthd_t)
 dev_read_framebuffer(plymouthd_t)
+dev_read_sysfs(plymouthd_t)
+dev_rw_dri(plymouthd_t)
 dev_write_framebuffer(plymouthd_t)
 
 domain_use_interactive_fds(plymouthd_t)
 
-fs_getattr_all_fs(plymouthd_t)
-
 files_read_etc_files(plymouthd_t)
 files_read_usr_files(plymouthd_t)
+files_search_spool(plymouthd_t)
+files_search_var_lib(plymouthd_t)
+
+fs_getattr_all_fs(plymouthd_t)
 
 term_getattr_pty_fs(plymouthd_t)
 term_use_all_terms(plymouthd_t)
