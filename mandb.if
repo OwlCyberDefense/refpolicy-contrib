@@ -42,7 +42,7 @@ interface(`mandb_run',`
 		attribute_role mandb_roles;
 	')
 
-	lightsquid_domtrans($1)
+	mandb_domtrans($1)
 	roleattribute $2 mandb_roles;
 ')
 
@@ -122,7 +122,7 @@ interface(`mandb_manage_cache_content',`
 #
 interface(`mandb_admin',`
 	gen_require(`
-		type mandb_t, mandb_cache_t;
+		type mandb_t, mandb_cache_t, mandb_unit_t;
 	')
 
 	allow $1 mandb_t:process { ptrace signal_perms };
@@ -130,6 +130,11 @@ interface(`mandb_admin',`
 
 	mandb_run($1, $2)
 
-	# pending
-	# miscfiles_manage_man_cache_content(mandb_t)
+	ifdef(`init_systemd',`
+		gen_require(`
+			class service { start status stop };
+		')
+
+		allow $1 mandb_unit_t:service { start status stop };
+	')
 ')
