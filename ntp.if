@@ -81,7 +81,7 @@ interface(`ntp_run',`
 
 ########################################
 ## <summary>
-##	Execute ntpdate server in the ntpd domain.
+##	Execute ntpdate server in the ntpdate domain.
 ## </summary>
 ## <param name="domain">
 ##	<summary>
@@ -91,11 +91,37 @@ interface(`ntp_run',`
 #
 interface(`ntp_domtrans_ntpdate',`
 	gen_require(`
-		type ntpd_t, ntpdate_exec_t;
+		type ntpdate_t, ntpdate_exec_t;
 	')
 
 	corecmd_search_bin($1)
-	domtrans_pattern($1, ntpdate_exec_t, ntpd_t)
+	domtrans_pattern($1, ntpdate_exec_t, ntpdate_t)
+')
+
+########################################
+## <summary>
+##	Execute ntpdate in the ntpdate domain, and
+##	allow the specified role the ntpdate domain.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed to transition.
+##	</summary>
+## </param>
+## <param name="role">
+##	<summary>
+##	Role allowed access.
+##	</summary>
+## </param>
+## <rolecap/>
+#
+interface(`ntp_run_ntpdate',`
+	gen_require(`
+		attribute_role ntpdate_roles;
+	')
+
+	ntp_domtrans_ntpdate($1)
+	roleattribute $2 ntpdate_roles;
 ')
 
 ########################################
@@ -202,8 +228,7 @@ interface(`ntp_admin',`
 		type ntpd_unit_t;
 	')
 
-	allow $1 ntpd_t:process { ptrace signal_perms };
-	ps_process_pattern($1, ntpd_t)
+	admin_process_pattern($1, ntpd_t)
 
 	init_startstop_service($1, $2, ntpd_t, ntpd_initrc_exec_t, ntpd_unit_t)
 
@@ -222,5 +247,5 @@ interface(`ntp_admin',`
 	files_list_pids($1)
 	admin_pattern($1, ntpd_pid_t)
 
-	ntp_run($1, $2)
+	ntp_run_ntpdate($1, $2)
 ')

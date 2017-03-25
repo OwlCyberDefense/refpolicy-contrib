@@ -6,6 +6,7 @@ policy_module(ntp, 1.16.2)
 #
 
 attribute_role ntpd_roles;
+attribute_role ntpdate_roles;
 
 type ntp_conf_t;
 files_config_file(ntp_conf_t)
@@ -44,20 +45,22 @@ files_tmpfs_file(ntpd_tmpfs_t)
 type ntpd_unit_t;
 init_unit_file(ntpd_unit_t)
 
+type ntpdate_t;
 type ntpdate_exec_t;
-init_system_domain(ntpd_t, ntpdate_exec_t)
+application_domain(ntpdate_t, ntpdate_exec_t)
+role ntpdate_roles types ntpdate_t;
 
 ########################################
 #
-# Local policy
+# Local daemon policy
 #
 
-allow ntpd_t self:capability { chown dac_override kill setgid setuid sys_time ipc_lock ipc_owner sys_chroot sys_nice };
-dontaudit ntpd_t self:capability { net_admin sys_tty_config fsetid sys_resource };
-allow ntpd_t self:process { signal_perms getcap setcap setsched setrlimit };
+# sys_time : modify system time
+allow ntpd_t self:capability { setgid setuid sys_time };
+# sys_resource : setrlimit
+dontaudit ntpd_t self:capability sys_resource;
+allow ntpd_t self:process { getcap setcap setsched signal_perms setrlimit };
 allow ntpd_t self:fifo_file rw_fifo_file_perms;
-allow ntpd_t self:shm create_shm_perms;
-allow ntpd_t self:socket create;
 allow ntpd_t self:tcp_socket { accept listen };
 allow ntpd_t self:unix_dgram_socket sendto;
 
@@ -89,60 +92,39 @@ manage_dirs_pattern(ntpd_t, ntpd_tmpfs_t, ntpd_tmpfs_t)
 manage_files_pattern(ntpd_t, ntpd_tmpfs_t, ntpd_tmpfs_t)
 fs_tmpfs_filetrans(ntpd_t, ntpd_tmpfs_t, { dir file })
 
-can_exec(ntpd_t, ntpd_exec_t)
-
 kernel_read_kernel_sysctls(ntpd_t)
 kernel_read_system_state(ntpd_t)
 kernel_read_network_state(ntpd_t)
-kernel_request_load_module(ntpd_t)
 
-corenet_all_recvfrom_unlabeled(ntpd_t)
-corenet_all_recvfrom_netlabel(ntpd_t)
-corenet_tcp_sendrecv_generic_if(ntpd_t)
-corenet_udp_sendrecv_generic_if(ntpd_t)
-corenet_tcp_sendrecv_generic_node(ntpd_t)
-corenet_udp_sendrecv_generic_node(ntpd_t)
 corenet_udp_bind_generic_node(ntpd_t)
-
-corenet_sendrecv_ntp_server_packets(ntpd_t)
 corenet_udp_bind_ntp_port(ntpd_t)
-corenet_udp_sendrecv_ntp_port(ntpd_t)
-
-corenet_sendrecv_ntp_client_packets(ntpd_t)
 corenet_tcp_connect_ntp_port(ntpd_t)
-corenet_tcp_sendrecv_ntp_port(ntpd_t)
 
 corecmd_exec_bin(ntpd_t)
 corecmd_exec_shell(ntpd_t)
 
-dev_read_sysfs(ntpd_t)
 dev_read_urand(ntpd_t)
 dev_rw_realtime_clock(ntpd_t)
 
-domain_use_interactive_fds(ntpd_t)
-domain_dontaudit_list_all_domains_state(ntpd_t)
-
 files_read_etc_runtime_files(ntpd_t)
 files_read_usr_files(ntpd_t)
-files_list_var_lib(ntpd_t)
-
-fs_getattr_all_fs(ntpd_t)
-fs_search_auto_mountpoints(ntpd_t)
-
-term_use_ptmx(ntpd_t)
+files_search_var_lib(ntpd_t)
 
 auth_use_nsswitch(ntpd_t)
-
-init_exec_script_files(ntpd_t)
 
 logging_send_syslog_msg(ntpd_t)
 
 miscfiles_read_localization(ntpd_t)
 
-userdom_dontaudit_use_unpriv_user_fds(ntpd_t)
-userdom_list_user_home_dirs(ntpd_t)
+ifdef(`hide_broken_symptoms',`
+	# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=855444
+
+	kernel_dontaudit_request_load_module(ntpd_t)
+	dontaudit ntpd_t self:socket create;
+')
 
 optional_policy(`
+	cron_system_entry(ntpd_t, ntpd_exec_t)
 	cron_system_entry(ntpd_t, ntpdate_exec_t)
 ')
 
@@ -160,14 +142,24 @@ optional_policy(`
 	hal_dontaudit_write_log(ntpd_t)
 ')
 
-optional_policy(`
-	logrotate_exec(ntpd_t)
-')
+########################################
+#
+# Local client policy
+#
 
-optional_policy(`
-	seutil_sigchld_newrole(ntpd_t)
-')
+allow ntpdate_t self:capability { sys_nice sys_time };
+allow ntpdate_t self:process setsched;
+allow ntpdate_t self:unix_dgram_socket { create connect };
 
-optional_policy(`
-	udev_read_db(ntpd_t)
-')
+auth_use_nsswitch(ntpdate_t)
+
+corenet_udp_bind_generic_node(ntpdate_t)
+corenet_udp_bind_ntp_port(ntpdate_t)
+
+domain_use_interactive_fds(ntpdate_t)
+
+logging_send_syslog_msg(ntpdate_t)
+
+miscfiles_read_localization(ntpdate_t)
+
+userdom_use_inherited_user_terminals(ntpdate_t)
