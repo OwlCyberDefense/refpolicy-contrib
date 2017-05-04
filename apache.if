@@ -125,6 +125,151 @@ template(`apache_content_template',`
 
 ########################################
 ## <summary>
+##	Prepare a set of derived types for
+##	httpd web content without creating them.
+## </summary>
+## <param name="type">
+##	<summary>
+##	The type to be used for content.
+##	</summary>
+## </param>
+## <param name="type">
+##	<summary>
+##	The type to be used for htaccess.
+##	</summary>
+## </param>
+## <param name="type">
+##	<summary>
+##	The type to be used for script.
+##	</summary>
+## </param>
+## <param name="type">
+##	<summary>
+##	The type to be used for script exec.
+##	</summary>
+## </param>
+## <param name="type">
+##	<summary>
+##	The type to be used for rw content.
+##	</summary>
+## </param>
+## <param name="type">
+##	<summary>
+##	The type to be used for ra content.
+##	</summary>
+## </param>
+#
+template(`apache_content_template_nonbase',`
+	gen_require(`
+		attribute httpdcontent, httpd_exec_scripts, httpd_script_exec_type;
+		attribute httpd_script_domains, httpd_htaccess_type;
+		attribute httpd_rw_content, httpd_ra_content;
+		type httpd_t, httpd_suexec_t;
+	')
+
+	########################################
+	#
+	# Declarations
+	#
+
+	## <desc>
+	##	<p>
+	##	Determine whether the script domain can
+	##	modify public files used for public file
+	##	transfer services. Directories/Files must
+	##	be labeled public_content_rw_t.
+	##	</p>
+	## </desc>
+	gen_tunable(allow_httpd_$1_script_anon_write, false)
+
+	typeattribute $1 httpdcontent; # customizable
+	files_type($1)
+
+	typeattribute $2 httpd_htaccess_type; # customizable;
+	files_type($2)
+
+	typeattribute $3 httpd_script_domains;
+	domain_type($3)
+	role system_r types $3;
+
+	typeattribute $4 httpd_script_exec_type; # customizable;
+	corecmd_shell_entry_type($3)
+	domain_entry_file($3, $4)
+
+	typeattribute $5 httpdcontent, httpd_rw_content; # customizable
+	files_type($5)
+
+	typeattribute $6 httpdcontent, httpd_ra_content; # customizable
+	files_type($6)
+
+	########################################
+	#
+	# Policy
+	#
+
+	can_exec($3, $4)
+
+	allow $3 $6:dir { list_dir_perms add_entry_dir_perms setattr_dir_perms };
+	allow $3 $6:file { append_file_perms read_file_perms create_file_perms setattr_file_perms };
+	allow $3 $6:lnk_file read_lnk_file_perms;
+
+	allow $3 { $1 $4 }:dir list_dir_perms;
+	allow $3 $1:file read_file_perms;
+	allow $3 { $1 $4 }:lnk_file read_lnk_file_perms;
+
+	manage_dirs_pattern($3, $5, $5)
+	manage_files_pattern($3, $5, $5)
+	manage_lnk_files_pattern($3, $5, $5)
+	manage_fifo_files_pattern($3, $5, $5)
+	manage_sock_files_pattern($3, $5, $5)
+	files_tmp_filetrans($3, $5, { dir file lnk_file sock_file fifo_file })
+
+	allow { httpd_t httpd_suexec_t } $1:dir list_dir_perms;
+	allow { httpd_t httpd_suexec_t } { $1 $2 }:file read_file_perms;
+	allow { httpd_t httpd_suexec_t } $1:lnk_file read_lnk_file_perms;
+
+	tunable_policy(`allow_httpd_$1_script_anon_write',`
+		miscfiles_manage_public_files($3)
+	')
+
+	tunable_policy(`httpd_builtin_scripting',`
+		manage_dirs_pattern(httpd_t, $5, $5)
+		manage_files_pattern(httpd_t, $5, $5)
+		manage_fifo_files_pattern(httpd_t, $5, $5)
+		manage_lnk_files_pattern(httpd_t, $5, $5)
+		manage_sock_files_pattern(httpd_t, $5, $5)
+
+		allow httpd_t $6:dir { list_dir_perms add_entry_dir_perms setattr_dir_perms };
+		allow httpd_t $6:file { append_file_perms read_file_perms create_file_perms setattr_file_perms };
+		allow httpd_t $6:lnk_file read_lnk_file_perms;
+	')
+
+	tunable_policy(`httpd_builtin_scripting && httpd_tmp_exec',`
+		can_exec(httpd_t, $5)
+	')
+
+	tunable_policy(`httpd_enable_cgi',`
+		allow $3 $4:file entrypoint;
+		domtrans_pattern({ httpd_t httpd_suexec_t httpd_exec_scripts }, $4, $3)
+	')
+
+	tunable_policy(`httpd_enable_cgi && httpd_tmp_exec',`
+		can_exec($3, $5)
+	')
+
+	tunable_policy(`httpd_enable_cgi && httpd_unified',`
+		allow $3 { $1 $6 }:file entrypoint;
+		allow $3 { $1 $6 }:dir manage_dir_perms;
+		allow $3 { $1 $6 }:file manage_file_perms;
+	')
+
+	tunable_policy(`httpd_enable_cgi && httpd_unified && httpd_builtin_scripting',`
+		filetrans_pattern(httpd_t, $1, $5, { file dir fifo_file lnk_file sock_file })
+	')
+')
+
+########################################
+## <summary>
 ##	Role access for apache.
 ## </summary>
 ## <param name="role">
