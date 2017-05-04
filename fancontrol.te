@@ -1,0 +1,41 @@
+policy_module(fancontrol, 0.0.1)
+
+########################################
+#
+# Declarations
+#
+
+attribute_role fancontrol_roles;
+
+type fancontrol_t;
+type fancontrol_exec_t;
+init_daemon_domain(fancontrol_t, fancontrol_exec_t)
+role fancontrol_roles types fancontrol_t;
+
+type fancontrol_pid_t;
+files_pid_file(fancontrol_pid_t)
+
+type fancontrol_unit_t;
+init_unit_file(fancontrol_unit_t)
+
+########################################
+#
+# Daemon local policy
+#
+
+allow fancontrol_t self:fifo_file rw_fifo_file_perms;
+allow fancontrol_t self:unix_stream_socket { connect create };
+
+allow fancontrol_t fancontrol_pid_t:file { create write_file_perms unlink };
+files_pid_filetrans(fancontrol_t, fancontrol_pid_t, file)
+
+kernel_read_system_state(fancontrol_t)
+
+corecmd_exec_bin(fancontrol_t)
+corecmd_exec_shell(fancontrol_t)
+
+dev_rw_sysfs(fancontrol_t)
+
+files_read_etc_files(fancontrol_t)
+
+miscfiles_read_localization(fancontrol_t)
