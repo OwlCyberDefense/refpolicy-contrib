@@ -443,18 +443,16 @@ interface(`mysql_admin',`
 	gen_require(`
 		type mysqld_t, mysqld_var_run_t, mysqld_etc_t;
 		type mysqld_tmp_t, mysqld_db_t, mysqld_log_t;
-		type mysqld_safe_t, mysqlmanagerd_t, mysqlmanagerd_var_run_t;
-		type mysqld_initrc_exec_t, mysqlmanagerd_initrc_exec_t, mysqld_home_t;
+		type mysqld_safe_t, mysqld_initrc_exec_t, mysqld_home_t;
 	')
 
-	allow $1 { mysqld_safe_t mysqld_t mysqlmanagerd_t }:process { ptrace signal_perms };
-	ps_process_pattern($1, { mysqld_safe_t mysqld_t mysqlmanagerd_t })
+	allow $1 { mysqld_safe_t mysqld_t }:process { ptrace signal_perms };
+	ps_process_pattern($1, { mysqld_safe_t mysqld_t })
 
 	init_startstop_service($1, $2, mysqld_t, mysqld_initrc_exec_t)
-	init_startstop_service($1, $2, mysqlmanagerd_t, mysqlmanagerd_initrc_exec_t)
 
 	files_search_pids($1)
-	admin_pattern($1, { mysqlmanagerd_var_run_t mysqld_var_run_t })
+	admin_pattern($1, mysqld_var_run_t)
 
 	files_search_var_lib($1)
 	admin_pattern($1, mysqld_db_t)
