@@ -138,7 +138,7 @@ interface(`apt_rw_pipes',`
 
 ########################################
 ## <summary>
-##	Read and write apt ptys.
+##	Read and write inherited apt ptys.
 ## </summary>
 ## <param name="domain">
 ##	<summary>
@@ -151,7 +151,7 @@ interface(`apt_use_ptys',`
 		type apt_devpts_t;
 	')
 
-	allow $1 apt_devpts_t:chr_file rw_term_perms;
+	allow $1 apt_devpts_t:chr_file rw_inherited_term_perms;
 ')
 
 ########################################
