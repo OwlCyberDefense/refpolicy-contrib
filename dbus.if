@@ -3,10 +3,11 @@
 ########################################
 ## <summary>
 ##	DBUS stub interface.  No access allowed.
+##	Useful for availability checks in optional blocks.
 ## </summary>
 ## <param name="domain" unused="true">
 ##	<summary>
-##	Domain allowed access
+##	Unused
 ##	</summary>
 ## </param>
 #
@@ -67,7 +68,7 @@ template(`dbus_role_template',`
 	allow $3 $1_dbusd_t:dbus { send_msg acquire_svc };
 	allow $3 $1_dbusd_t:fd use;
 
-	allow $3 system_dbusd_t:dbus { send_msg acquire_svc };
+	allow $3 system_dbusd_t:dbus send_msg;
 
 	allow $3 { session_dbusd_home_t session_dbusd_tmp_t }:dir { manage_dir_perms relabel_dir_perms };
 	allow $3 { session_dbusd_home_t session_dbusd_tmp_t }:file { manage_file_perms relabel_file_perms };
@@ -75,19 +76,9 @@ template(`dbus_role_template',`
 
 	domtrans_pattern($3, dbusd_exec_t, $1_dbusd_t)
 
-	ps_process_pattern($3, $1_dbusd_t)
-	allow $3 $1_dbusd_t:process { ptrace signal_perms };
-
-	allow $1_dbusd_t $3:process sigkill;
-
-	corecmd_bin_domtrans($1_dbusd_t, $3)
-	corecmd_shell_domtrans($1_dbusd_t, $3)
+	admin_process_pattern($3, $1_dbusd_t)
 
 	auth_use_nsswitch($1_dbusd_t)
-
-	ifdef(`hide_broken_symptoms',`
-		dontaudit $3 $1_dbusd_t:netlink_selinux_socket { read write };
-	')
 
 	optional_policy(`
 		systemd_read_logind_pids($1_dbusd_t)
@@ -108,7 +99,7 @@ template(`dbus_role_template',`
 interface(`dbus_system_bus_client',`
 	gen_require(`
 		attribute dbusd_system_bus_client;
-		type system_dbusd_t, system_dbusd_var_run_t, system_dbusd_var_lib_t;
+		type system_dbusd_t, system_dbusd_runtime_t, system_dbusd_var_lib_t;
 		class dbus send_msg;
 	')
 
@@ -121,7 +112,7 @@ interface(`dbus_system_bus_client',`
 	read_files_pattern($1, system_dbusd_var_lib_t, system_dbusd_var_lib_t)
 
 	files_search_pids($1)
-	stream_connect_pattern($1, system_dbusd_var_run_t, system_dbusd_var_run_t, system_dbusd_t)
+	stream_connect_pattern($1, system_dbusd_runtime_t, system_dbusd_runtime_t, system_dbusd_t)
 
 	dbus_read_config($1)
 ')
@@ -336,11 +327,11 @@ interface(`dbus_send_spec_session_bus',`
 #
 interface(`dbus_read_config',`
 	gen_require(`
-		type dbusd_etc_t;
+		type dbusd_conf_t;
 	')
 
-	allow $1 dbusd_etc_t:dir list_dir_perms;
-	allow $1 dbusd_etc_t:file read_file_perms;
+	allow $1 dbusd_conf_t:dir list_dir_perms;
+	allow $1 dbusd_conf_t:file read_file_perms;
 ')
 
 ########################################
@@ -549,13 +540,13 @@ interface(`dbus_system_bus_unconfined',`
 interface(`dbus_system_domain',`
 	gen_require(`
 		type system_dbusd_t;
-		role system_r;
+		attribute_role system_dbusd_roles;
 	')
 
 	domain_type($1)
 	domain_entry_file($1, $2)
 
-	role system_r types $1;
+	role system_dbusd_roles types $1;
 
 	domtrans_pattern(system_dbusd_t, $2, $1)
 
@@ -564,14 +555,8 @@ interface(`dbus_system_domain',`
 
 	ps_process_pattern(system_dbusd_t, $1)
 
-	userdom_read_all_users_state($1)
-
 	ifdef(`init_systemd',`
 		init_daemon_domain($1, $2)
-	')
-
-	ifdef(`hide_broken_symptoms', `
-		dontaudit $1 system_dbusd_t:netlink_selinux_socket { read write };
 	')
 ')
 
