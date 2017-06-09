@@ -279,6 +279,7 @@ interface(`dpkg_lock_db',`
 
 	files_search_var_lib($1)
 	allow $1 dpkg_var_lib_t:dir list_dir_perms;
+	filetrans_pattern($1, dpkg_var_lib_t, dpkg_lock_t, file, "lock")
 	allow $1 dpkg_lock_t:file manage_file_perms;
 ')
 
