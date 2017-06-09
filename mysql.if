@@ -30,6 +30,7 @@ interface(`mysql_role',`
 ## </param>
 #
 interface(`mysql_domtrans',`
+	refpolicywarn(`$0($*) has been deprecated')
 	gen_require(`
 		type mysqld_t, mysqld_exec_t;
 	')
@@ -55,6 +56,7 @@ interface(`mysql_domtrans',`
 ## </param>
 #
 interface(`mysql_run_mysqld',`
+	refpolicywarn(`$0($*) has been deprecated')
 	gen_require(`
 		attribute_role mysqld_roles;
 	')
@@ -116,11 +118,11 @@ interface(`mysql_tcp_connect',`
 #
 interface(`mysql_stream_connect',`
 	gen_require(`
-		type mysqld_t, mysqld_var_run_t, mysqld_db_t;
+		type mysqld_t, mysqld_runtime_t, mysqld_db_t;
 	')
 
 	files_search_pids($1)
-	stream_connect_pattern($1, { mysqld_db_t mysqld_var_run_t }, mysqld_var_run_t, mysqld_t)
+	stream_connect_pattern($1, { mysqld_db_t mysqld_runtime_t }, mysqld_runtime_t, mysqld_t)
 ')
 
 ########################################
@@ -136,13 +138,13 @@ interface(`mysql_stream_connect',`
 #
 interface(`mysql_read_config',`
 	gen_require(`
-		type mysqld_etc_t;
+		type mysqld_conf_t;
 	')
 
 	files_search_etc($1)
-	allow $1 mysqld_etc_t:dir list_dir_perms;
-	allow $1 mysqld_etc_t:file read_file_perms;
-	allow $1 mysqld_etc_t:lnk_file read_lnk_file_perms;
+	allow $1 mysqld_conf_t:dir list_dir_perms;
+	allow $1 mysqld_conf_t:file read_file_perms;
+	allow $1 mysqld_conf_t:lnk_file read_lnk_file_perms;
 ')
 
 ########################################
@@ -355,6 +357,8 @@ interface(`mysql_home_filetrans_mysqld_home',`
 ## </param>
 #
 interface(`mysql_write_log',`
+	refpolicywarn(`$0($*) has been deprecated.')
+
 	gen_require(`
 		type mysqld_log_t;
 	')
@@ -395,11 +399,11 @@ interface(`mysql_domtrans_mysql_safe',`
 #
 interface(`mysql_read_pid_files',`
 	gen_require(`
-		type mysqld_var_run_t;
+		type mysqld_runtime_t;
 	')
 
 	files_search_pids($1)
-	read_files_pattern($1, mysqld_var_run_t, mysqld_var_run_t)
+	read_files_pattern($1, mysqld_runtime_t, mysqld_runtime_t)
 ')
 
 #####################################
@@ -415,11 +419,11 @@ interface(`mysql_read_pid_files',`
 #
 interface(`mysql_search_pid_files',`
 	gen_require(`
-		type mysqld_var_run_t;
+		type mysqld_runtime_t;
 	')
 
 	files_search_pids($1)
-	search_dirs_pattern($1, mysqld_var_run_t, mysqld_var_run_t)
+	search_dirs_pattern($1, mysqld_runtime_t, mysqld_runtime_t)
 ')
 
 ########################################
@@ -441,32 +445,29 @@ interface(`mysql_search_pid_files',`
 #
 interface(`mysql_admin',`
 	gen_require(`
-		type mysqld_t, mysqld_var_run_t, mysqld_etc_t;
+		type mysqld_t, mysqld_runtime_t, mysqld_conf_t;
 		type mysqld_tmp_t, mysqld_db_t, mysqld_log_t;
-		type mysqld_safe_t, mysqlmanagerd_t, mysqlmanagerd_var_run_t;
-		type mysqld_initrc_exec_t, mysqlmanagerd_initrc_exec_t, mysqld_home_t;
+		type mysqld_safe_t, mysqld_initrc_exec_t, mysqld_home_t;
+		type mysqld_unit_t;
 	')
 
-	allow $1 { mysqld_safe_t mysqld_t mysqlmanagerd_t }:process { ptrace signal_perms };
-	ps_process_pattern($1, { mysqld_safe_t mysqld_t mysqlmanagerd_t })
+	admin_process_pattern($1, { mysqld_safe_t mysqld_t })
+	allow $1 mysqld_t:unix_stream_socket connectto;
 
-	init_startstop_service($1, $2, mysqld_t, mysqld_initrc_exec_t)
-	init_startstop_service($1, $2, mysqlmanagerd_t, mysqlmanagerd_initrc_exec_t)
+	init_startstop_service($1, $2, mysqld_t, mysqld_initrc_exec_t, mysqld_unit_t)
 
 	files_search_pids($1)
-	admin_pattern($1, { mysqlmanagerd_var_run_t mysqld_var_run_t })
+	admin_pattern($1, mysqld_runtime_t)
 
 	files_search_var_lib($1)
 	admin_pattern($1, mysqld_db_t)
 
 	files_search_etc($1)
-	admin_pattern($1, { mysqld_etc_t mysqld_home_t })
+	admin_pattern($1, { mysqld_conf_t mysqld_home_t })
 
 	logging_search_logs($1)
 	admin_pattern($1, mysqld_log_t)
 
 	files_search_tmp($1)
 	admin_pattern($1, mysqld_tmp_t)
-
-	mysql_run_mysqld($1, $2)
 ')
