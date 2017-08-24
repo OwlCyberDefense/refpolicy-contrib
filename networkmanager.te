@@ -1,4 +1,4 @@
-policy_module(networkmanager, 1.21.0)
+policy_module(networkmanager, 1.21.1)
 
 ########################################
 #
@@ -361,6 +361,10 @@ optional_policy(`
 	vpn_signal(NetworkManager_t)
 	vpn_signull(NetworkManager_t)
 	vpn_relabelfrom_tun_socket(NetworkManager_t)
+')
+
+optional_policy(`
+	openvswitch_stream_connect(NetworkManager_t)
 ')
 
 ########################################
