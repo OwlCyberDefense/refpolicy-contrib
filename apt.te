@@ -1,4 +1,4 @@
-policy_module(apt, 1.11.0)
+policy_module(apt, 1.11.1)
 
 ########################################
 #
@@ -135,6 +135,15 @@ optional_policy(`
 
 optional_policy(`
 	dbus_system_domain(apt_t, apt_exec_t)
+
+	optional_policy(`
+		# for packagekitd
+		policykit_dbus_chat(apt_t)
+	')
+
+	optional_policy(`
+		unconfined_dbus_send(apt_t)
+	')
 ')
 
 optional_policy(`
