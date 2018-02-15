@@ -1,4 +1,4 @@
-policy_module(logrotate, 1.20.0)
+policy_module(logrotate, 1.20.1)
 
 ########################################
 #
@@ -77,6 +77,7 @@ domain_use_interactive_fds(logrotate_t)
 domain_getattr_all_entry_files(logrotate_t)
 domain_read_all_domains_state(logrotate_t)
 
+files_map_etc_files(logrotate_t)
 files_read_usr_files(logrotate_t)
 files_read_etc_runtime_files(logrotate_t)
 files_read_all_pids(logrotate_t)

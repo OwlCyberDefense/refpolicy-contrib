@@ -301,3 +301,21 @@ interface(`dpkg_manage_script_tmp_files',`
 	allow $1 dpkg_script_tmp_t:dir manage_dir_perms;
 	allow $1 dpkg_script_tmp_t:file manage_file_perms;
 ')
+
+########################################
+## <summary>
+##	map dpkg_script_tmp_t files
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`dpkg_map_script_tmp_files',`
+	gen_require(`
+		type dpkg_script_tmp_t;
+	')
+
+	allow $1 dpkg_script_tmp_t:file map;
+')
