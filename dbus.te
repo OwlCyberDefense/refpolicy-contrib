@@ -1,4 +1,4 @@
-policy_module(dbus, 1.24.1)
+policy_module(dbus, 1.24.2)
 
 gen_require(`
 	class dbus all_dbus_perms;
@@ -184,6 +184,10 @@ optional_policy(`
 
 optional_policy(`
 	udev_read_db(system_dbusd_t)
+')
+
+optional_policy(`
+	unconfined_dbus_send(system_dbusd_t)
 ')
 
 optional_policy(`
