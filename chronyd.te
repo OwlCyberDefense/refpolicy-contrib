@@ -9,6 +9,10 @@ type chronyd_t;
 type chronyd_exec_t;
 init_daemon_domain(chronyd_t, chronyd_exec_t)
 
+type chronyc_t;
+type chronyc_exec_t;
+init_daemon_domain(chronyc_t, chronyc_exec_t)
+
 type chronyd_conf_t;
 files_config_file(chronyd_conf_t)
 
@@ -35,10 +39,10 @@ init_daemon_pid_file(chronyd_var_run_t, dir, "chrony")
 
 ########################################
 #
-# Local policy
+# chronyd local policy
 #
 
-allow chronyd_t self:capability { dac_override ipc_lock setgid setuid sys_resource sys_time };
+allow chronyd_t self:capability { chown dac_override ipc_lock setgid setuid sys_resource sys_time };
 allow chronyd_t self:process { getcap setcap setrlimit signal };
 allow chronyd_t self:shm create_shm_perms;
 allow chronyd_t self:fifo_file rw_fifo_file_perms;
@@ -91,6 +95,7 @@ logging_send_syslog_msg(chronyd_t)
 
 miscfiles_read_localization(chronyd_t)
 
+chronyd_dgram_send_cli(chronyd_t)
 chronyd_read_config(chronyd_t)
 
 optional_policy(`
@@ -100,3 +105,40 @@ optional_policy(`
 optional_policy(`
 	mta_send_mail(chronyd_t)
 ')
+
+########################################
+#
+# chronyc local policy
+#
+
+allow chronyc_t self:capability { dac_override };
+allow chronyc_t self:process { signal };
+allow chronyc_t self:udp_socket create_socket_perms;
+allow chronyc_t self:netlink_route_socket create_netlink_socket_perms;
+
+manage_dirs_pattern(chronyc_t, chronyd_var_run_t, chronyd_var_run_t)
+manage_files_pattern(chronyc_t, chronyd_var_run_t, chronyd_var_run_t)
+manage_sock_files_pattern(chronyc_t, chronyd_var_run_t, chronyd_var_run_t)
+files_pid_filetrans(chronyc_t, chronyd_var_run_t, { dir file sock_file })
+
+corenet_all_recvfrom_unlabeled(chronyc_t)
+corenet_all_recvfrom_netlabel(chronyc_t)
+corenet_udp_sendrecv_generic_if(chronyc_t)
+corenet_udp_sendrecv_generic_node(chronyc_t)
+
+corenet_sendrecv_chronyd_client_packets(chronyc_t)
+corenet_udp_sendrecv_chronyd_port(chronyc_t)
+
+files_read_etc_files(chronyc_t)
+files_read_usr_files(chronyc_t)
+
+logging_send_syslog_msg(chronyc_t)
+
+sysnet_read_config(chronyc_t)
+sysnet_dns_name_resolve(chronyc_t)
+
+miscfiles_read_localization(chronyc_t)
+
+chronyd_dgram_send(chronyc_t)
+chronyd_read_config(chronyc_t)
+

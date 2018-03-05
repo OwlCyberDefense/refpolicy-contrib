@@ -252,6 +252,26 @@ interface(`chronyd_status',`
 	allow $1 chronyd_unit_t:service status;
 ')
 
+########################################
+## <summary>
+##	Send to chronyd command line interface using a unix domain
+##	datagram socket.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`chronyd_dgram_send_cli',`
+	gen_require(`
+		type chronyc_t, chronyd_var_run_t;
+	')
+
+	files_search_pids($1)
+	dgram_send_pattern($1, chronyd_var_run_t, chronyd_var_run_t, chronyc_t)
+')
+
 ####################################
 ## <summary>
 ##	All of the rules required to
