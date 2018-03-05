@@ -19,6 +19,25 @@ interface(`chronyd_domtrans',`
 	domtrans_pattern($1, chronyd_exec_t, chronyd_t)
 ')
 
+#####################################
+## <summary>
+##	Execute chronyc in the chronyc domain.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed to transition.
+##	</summary>
+## </param>
+#
+interface(`chronyd_domtrans_cli',`
+	gen_require(`
+		type chronyc_t, chronyc_exec_t;
+	')
+
+	corecmd_search_bin($1)
+	domtrans_pattern($1, chronyc_exec_t, chronyc_t)
+')
+
 ########################################
 ## <summary>
 ##	Execute chronyd server in the
@@ -55,6 +74,33 @@ interface(`chronyd_exec',`
 
 	corecmd_search_bin($1)
 	can_exec($1, chronyd_exec_t)
+')
+
+########################################
+## <summary>
+##	Execute chronyc in the chronyc domain,
+##	and allow the specified roles the
+##	chronyc domain.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed to transition.
+##	</summary>
+## </param>
+## <param name="role">
+##	<summary>
+##	Role allowed access.
+##	</summary>
+## </param>
+## <rolecap/>
+#
+interface(`chronyd_run_cli',`
+	gen_require(`
+		attribute_role chronyc_roles;
+	')
+
+	chronyd_domtrans_cli($1)
+	roleattribute $2 chronyc_roles;
 ')
 
 #####################################

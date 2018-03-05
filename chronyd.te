@@ -5,6 +5,8 @@ policy_module(chronyd, 1.5.0)
 # Declarations
 #
 
+attribute_role chronyc_roles;
+
 type chronyd_t;
 type chronyd_exec_t;
 init_daemon_domain(chronyd_t, chronyd_exec_t)
@@ -12,6 +14,8 @@ init_daemon_domain(chronyd_t, chronyd_exec_t)
 type chronyc_t;
 type chronyc_exec_t;
 init_daemon_domain(chronyc_t, chronyc_exec_t)
+application_domain(chronyc_t, chronyc_exec_t)
+role chronyc_roles types chronyc_t;
 
 type chronyd_conf_t;
 files_config_file(chronyd_conf_t)
@@ -132,12 +136,16 @@ corenet_udp_sendrecv_chronyd_port(chronyc_t)
 files_read_etc_files(chronyc_t)
 files_read_usr_files(chronyc_t)
 
+locallogin_use_fds(chronyc_t)
+
 logging_send_syslog_msg(chronyc_t)
 
 sysnet_read_config(chronyc_t)
 sysnet_dns_name_resolve(chronyc_t)
 
 miscfiles_read_localization(chronyc_t)
+
+userdom_use_user_ttys(chronyc_t)
 
 chronyd_dgram_send(chronyc_t)
 chronyd_read_config(chronyc_t)
