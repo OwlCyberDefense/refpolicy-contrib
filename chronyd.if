@@ -195,6 +195,63 @@ interface(`chronyd_read_key_files',`
 	read_files_pattern($1, chronyd_keys_t, chronyd_keys_t)
 ')
 
+########################################
+## <summary>
+##	Allow specified domain to enable and disable chronyd unit
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`chronyd_enabledisable',`
+	gen_require(`
+		type chronyd_unit_t;
+		class service { enable disable };
+	')
+
+	allow $1 chronyd_unit_t:service { enable disable };
+')
+
+########################################
+## <summary>
+##	Allow specified domain to start and stop chronyd unit
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`chronyd_startstop',`
+	gen_require(`
+		type chronyd_unit_t;
+		class service { start stop };
+	')
+
+	allow $1 chronyd_unit_t:service { start stop };
+')
+
+########################################
+## <summary>
+##	Allow specified domain to get status of chronyd unit
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`chronyd_status',`
+	gen_require(`
+		type chronyd_unit_t;
+		class service status;
+	')
+
+	allow $1 chronyd_unit_t:service status;
+')
+
 ####################################
 ## <summary>
 ##	All of the rules required to
