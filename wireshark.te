@@ -102,8 +102,9 @@ miscfiles_read_localization(wireshark_t)
 
 userdom_use_user_terminals(wireshark_t)
 
-userdom_manage_user_home_content_files(wireshark_t)
-userdom_user_home_dir_filetrans_user_home_content(wireshark_t, file)
+userdom_user_content_access_template(wireshark, wireshark_t)
+
+xdg_read_downloads(wireshark_t)
 
 tunable_policy(`use_nfs_home_dirs',`
 	fs_manage_nfs_dirs(wireshark_t)
