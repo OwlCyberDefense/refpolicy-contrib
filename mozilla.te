@@ -71,6 +71,9 @@ optional_policy(`
 	pulseaudio_tmpfs_content(mozilla_tmpfs_t)
 ')
 
+type mozilla_xdg_cache_t;
+xdg_cache_content(mozilla_xdg_cache_t)
+
 ########################################
 #
 # Local policy
@@ -115,6 +118,10 @@ allow mozilla_t mozilla_plugin_rw_t:file read_file_perms;
 allow mozilla_t mozilla_plugin_rw_t:lnk_file read_lnk_file_perms;
 
 stream_connect_pattern(mozilla_t, mozilla_plugin_tmpfs_t, mozilla_plugin_tmpfs_t, mozilla_plugin_t)
+
+manage_files_pattern(mozilla_t, mozilla_xdg_cache_t, mozilla_xdg_cache_t)
+manage_dirs_pattern(mozilla_t, mozilla_xdg_cache_t, mozilla_xdg_cache_t)
+xdg_cache_filetrans(mozilla_t, mozilla_xdg_cache_t, dir, "mozilla")
 
 can_exec(mozilla_t, { mozilla_exec_t mozilla_plugin_rw_t mozilla_plugin_home_t })
 
@@ -200,14 +207,17 @@ userdom_use_user_ptys(mozilla_t)
 userdom_manage_user_tmp_dirs(mozilla_t)
 userdom_manage_user_tmp_files(mozilla_t)
 
-userdom_manage_user_home_content_dirs(mozilla_t)
-userdom_manage_user_home_content_files(mozilla_t)
+userdom_user_content_access_template(mozilla, { mozilla_t mozilla_plugin_t })
 userdom_user_home_dir_filetrans_user_home_content(mozilla_t, { dir file })
 
 userdom_write_user_tmp_sockets(mozilla_t)
 
 mozilla_run_plugin(mozilla_t, mozilla_roles)
 mozilla_run_plugin_config(mozilla_t, mozilla_roles)
+
+xdg_read_config_files(mozilla_t)
+xdg_read_data_files(mozilla_t)
+xdg_manage_downloads(mozilla_t)
 
 xserver_user_x_domain_template(mozilla, mozilla_t, mozilla_tmpfs_t)
 xserver_dontaudit_read_xdm_tmp_files(mozilla_t)
@@ -510,13 +520,13 @@ miscfiles_dontaudit_setattr_fonts_cache_dirs(mozilla_plugin_t)
 userdom_manage_user_tmp_dirs(mozilla_plugin_t)
 userdom_manage_user_tmp_files(mozilla_plugin_t)
 
-userdom_manage_user_home_content_dirs(mozilla_plugin_t)
-userdom_manage_user_home_content_files(mozilla_plugin_t)
 userdom_user_home_dir_filetrans_user_home_content(mozilla_plugin_t, { dir file })
 
 userdom_write_user_tmp_sockets(mozilla_plugin_t)
 
 userdom_dontaudit_use_user_terminals(mozilla_plugin_t)
+
+xdg_read_config_files(mozilla_plugin_t)
 
 ifndef(`enable_mls',`
 	fs_list_dos(mozilla_plugin_t)
