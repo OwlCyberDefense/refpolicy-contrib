@@ -40,6 +40,9 @@ files_type(pulseaudio_var_lib_t)
 type pulseaudio_var_run_t;
 files_pid_file(pulseaudio_var_run_t)
 
+type pulseaudio_xdg_config_t;
+xdg_config_content(pulseaudio_xdg_config_t)
+
 ########################################
 #
 # Local policy
@@ -86,6 +89,10 @@ manage_dirs_pattern(pulseaudio_t, pulseaudio_var_run_t, pulseaudio_var_run_t)
 manage_files_pattern(pulseaudio_t, pulseaudio_var_run_t, pulseaudio_var_run_t)
 manage_sock_files_pattern(pulseaudio_t, pulseaudio_var_run_t, pulseaudio_var_run_t)
 files_pid_filetrans(pulseaudio_t, pulseaudio_var_run_t, { dir file })
+
+manage_dirs_pattern(pulseaudio_t, pulseaudio_xdg_config_t, pulseaudio_xdg_config_t)
+manage_files_pattern(pulseaudio_t, pulseaudio_xdg_config_t, pulseaudio_xdg_config_t)
+xdg_config_filetrans(pulseaudio_t, pulseaudio_xdg_config_t, dir, "pulse")
 
 allow pulseaudio_t pulseaudio_client:process signull;
 ps_process_pattern(pulseaudio_t, pulseaudio_client)
@@ -246,6 +253,10 @@ allow pulseaudio_client pulseaudio_tmp_t:sock_file manage_sock_file_perms;
 rw_files_pattern(pulseaudio_client, { pulseaudio_tmpfsfile pulseaudio_tmpfs_t }, { pulseaudio_tmpfsfile pulseaudio_tmpfs_t })
 allow pulseaudio_client pulseaudio_tmpfs_t:file map;
 delete_files_pattern(pulseaudio_client, pulseaudio_tmpfsfile, pulseaudio_tmpfsfile)
+
+manage_dirs_pattern(pulseaudio_client, pulseaudio_xdg_config_t, pulseaudio_xdg_config_t)
+manage_files_pattern(pulseaudio_client, pulseaudio_xdg_config_t, pulseaudio_xdg_config_t)
+xdg_config_filetrans(pulseaudio_client, pulseaudio_xdg_config_t, dir, "pulse")
 
 fs_getattr_tmpfs(pulseaudio_client)
 
