@@ -109,14 +109,15 @@ miscfiles_read_fonts(java_domain)
 
 userdom_dontaudit_use_user_terminals(java_domain)
 userdom_dontaudit_exec_user_home_content_files(java_domain)
-userdom_manage_user_home_content_dirs(java_domain)
-userdom_manage_user_home_content_files(java_domain)
-userdom_manage_user_home_content_symlinks(java_domain)
-userdom_manage_user_home_content_pipes(java_domain)
-userdom_manage_user_home_content_sockets(java_domain)
-userdom_user_home_dir_filetrans_user_home_content(java_domain, { file lnk_file sock_file fifo_file })
 
+userdom_user_content_access_template(java, java_domain)
 userdom_write_user_tmp_sockets(java_domain)
+
+tunable_policy(`java_manage_generic_user_content',`
+	userdom_manage_user_home_content_pipes(java_domain)
+	userdom_manage_user_home_content_sockets(java_domain)
+	userdom_user_home_dir_filetrans_user_home_content(java_domain, { file lnk_file sock_file fifo_file })
+')
 
 tunable_policy(`allow_java_execstack',`
 	allow java_domain self:process { execmem execstack };
