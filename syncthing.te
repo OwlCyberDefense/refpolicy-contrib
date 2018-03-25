@@ -13,8 +13,8 @@ type syncthing_exec_t;
 init_daemon_domain(syncthing_t, syncthing_exec_t)
 userdom_user_application_domain(syncthing_t, syncthing_exec_t)
 
-type syncthing_config_home_t;
-userdom_user_home_content(syncthing_config_home_t)
+type syncthing_xdg_config_t alias syncthing_config_home_t;
+xdg_config_content(syncthing_xdg_config_t)
 
 ########################################
 #
@@ -27,9 +27,10 @@ allow syncthing_t self:tcp_socket { listen accept };
 
 can_exec(syncthing_t, syncthing_exec_t)
 
-manage_dirs_pattern(syncthing_t, syncthing_config_home_t, syncthing_config_home_t)
-manage_files_pattern(syncthing_t, syncthing_config_home_t, syncthing_config_home_t)
-manage_lnk_files_pattern(syncthing_t, syncthing_config_home_t, syncthing_config_home_t)
+manage_dirs_pattern(syncthing_t, syncthing_xdg_config_t, syncthing_xdg_config_t)
+manage_files_pattern(syncthing_t, syncthing_xdg_config_t, syncthing_xdg_config_t)
+manage_lnk_files_pattern(syncthing_t, syncthing_xdg_config_t, syncthing_xdg_config_t)
+xdg_config_filetrans(syncthing_t, syncthing_xdg_config_t, dir)
 
 kernel_read_kernel_sysctls(syncthing_t)
 kernel_read_net_sysctls(syncthing_t)
@@ -58,13 +59,9 @@ auth_use_nsswitch(syncthing_t)
 miscfiles_read_generic_certs(syncthing_t)
 miscfiles_read_localization(syncthing_t)
 
-userdom_manage_user_home_content_files(syncthing_t)
-userdom_manage_user_home_content_dirs(syncthing_t)
-userdom_manage_user_home_content_symlinks(syncthing_t)
-userdom_user_home_dir_filetrans_user_home_content(syncthing_t, dir)
+userdom_user_content_access_template(syncthing, syncthing_t)
+
 userdom_use_user_terminals(syncthing_t)
-# newly created files in ~/.config/syncthing/ will transition to syncthing_config_home_t
-userdom_user_home_content_filetrans(syncthing_t, syncthing_config_home_t, dir, "syncthing")
 
 optional_policy(`
 	# temporary hack for /run/NetworkManager/resolv.conf until we make this part of sysnet_dns_name_resolve()
