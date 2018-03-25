@@ -85,6 +85,10 @@ logging_search_logs(minidlna_t)
 miscfiles_read_localization(minidlna_t)
 miscfiles_read_public_files(minidlna_t)
 
+xdg_read_music(minidlna_t)
+xdg_read_pictures(minidlna_t)
+xdg_read_videos(minidlna_t)
+
 tunable_policy(`minidlna_read_generic_user_content',`
 	userdom_list_user_tmp(minidlna_t)
 	userdom_read_user_home_content_files(minidlna_t)
