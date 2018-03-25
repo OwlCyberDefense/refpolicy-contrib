@@ -27,34 +27,34 @@ attribute telepathy_tmp_content;
 
 telepathy_domain_template(gabble)
 
-type telepathy_cache_home_t;
-userdom_user_home_content(telepathy_cache_home_t)
+type telepathy_xdg_cache_t alias telepathy_cache_home_t;
+xdg_cache_content(telepathy_xdg_cache_t)
 
-type telepathy_gabble_cache_home_t;
-userdom_user_home_content(telepathy_gabble_cache_home_t)
+type telepathy_gabble_xdg_cache_t alias telepathy_gabble_cache_home_t;
+xdg_cache_content(telepathy_gabble_xdg_cache_t)
 
 telepathy_domain_template(idle)
 telepathy_domain_template(logger)
 
-type telepathy_data_home_t;
-userdom_user_home_content(telepathy_data_home_t)
+type telepathy_xdg_data_t alias telepathy_data_home_t;
+xdg_data_content(telepathy_xdg_data_t)
 
-type telepathy_logger_cache_home_t;
-userdom_user_home_content(telepathy_logger_cache_home_t)
+type telepathy_logger_xdg_cache_t alias telepathy_logger_cache_home_t;
+xdg_cache_content(telepathy_logger_xdg_cache_t)
 
-type telepathy_logger_data_home_t;
-userdom_user_home_content(telepathy_logger_data_home_t)
+type telepathy_logger_xdg_data_t alias telepathy_logger_data_home_t;
+xdg_data_content(telepathy_logger_xdg_data_t)
 
 telepathy_domain_template(mission_control)
 
 type telepathy_mission_control_home_t;
 userdom_user_home_content(telepathy_mission_control_home_t)
 
-type telepathy_mission_control_data_home_t;
-userdom_user_home_content(telepathy_mission_control_data_home_t)
+type telepathy_mission_control_xdg_data_t alias telepathy_mission_control_data_home_t;
+xdg_data_content(telepathy_mission_control_xdg_data_t)
 
-type telepathy_mission_control_cache_home_t;
-userdom_user_home_content(telepathy_mission_control_cache_home_t)
+type telepathy_mission_control_xdg_cache_t alias telepathy_mission_control_cache_home_t;
+xdg_cache_content(telepathy_mission_control_xdg_cache_t)
 
 telepathy_domain_template(msn)
 telepathy_domain_template(salut)
@@ -74,10 +74,10 @@ allow telepathy_gabble_t self:tcp_socket { accept listen };
 allow telepathy_gabble_t self:unix_dgram_socket { create_socket_perms sendto };
 
 # ~/.cache/telepathy/gabble/caps-cache.db-journal
-manage_dirs_pattern(telepathy_gabble_t, telepathy_gabble_cache_home_t, telepathy_gabble_cache_home_t)
-manage_files_pattern(telepathy_gabble_t, telepathy_gabble_cache_home_t, telepathy_gabble_cache_home_t)
-filetrans_pattern(telepathy_gabble_t, telepathy_cache_home_t, telepathy_gabble_cache_home_t, dir, "gabble")
-# gnome_cache_filetrans(telepathy_gabble_t, telepathy_gabble_cache_home_t, dir, "wocky")
+manage_dirs_pattern(telepathy_gabble_t, telepathy_gabble_xdg_cache_t, telepathy_gabble_xdg_cache_t)
+manage_files_pattern(telepathy_gabble_t, telepathy_gabble_xdg_cache_t, telepathy_gabble_xdg_cache_t)
+filetrans_pattern(telepathy_gabble_t, telepathy_xdg_cache_t, telepathy_gabble_xdg_cache_t, dir, "gabble")
+# gnome_cache_filetrans(telepathy_gabble_t, telepathy_gabble_xdg_cache_t, dir, "wocky")
 
 manage_dirs_pattern(telepathy_gabble_t, telepathy_gabble_tmp_t, telepathy_gabble_tmp_t)
 manage_sock_files_pattern(telepathy_gabble_t, telepathy_gabble_tmp_t, telepathy_gabble_tmp_t)
@@ -179,13 +179,13 @@ tunable_policy(`telepathy_tcp_connect_generic_network_ports',`
 
 allow telepathy_logger_t self:unix_stream_socket create_socket_perms;
 
-manage_dirs_pattern(telepathy_logger_t, telepathy_logger_cache_home_t, telepathy_logger_cache_home_t)
-manage_files_pattern(telepathy_logger_t, telepathy_logger_cache_home_t, telepathy_logger_cache_home_t)
-filetrans_pattern(telepathy_logger_t, telepathy_cache_home_t, telepathy_logger_cache_home_t, dir, "logger")
+manage_dirs_pattern(telepathy_logger_t, telepathy_logger_xdg_cache_t, telepathy_logger_xdg_cache_t)
+manage_files_pattern(telepathy_logger_t, telepathy_logger_xdg_cache_t, telepathy_logger_xdg_cache_t)
+filetrans_pattern(telepathy_logger_t, telepathy_xdg_cache_t, telepathy_logger_xdg_cache_t, dir, "logger")
 
-manage_dirs_pattern(telepathy_logger_t, telepathy_logger_data_home_t, telepathy_logger_data_home_t)
-manage_files_pattern(telepathy_logger_t, telepathy_logger_data_home_t, telepathy_logger_data_home_t)
-# gnome_data_filetrans(telepathy_logger_t, telepathy_logger_data_home_t, dir, "TpLogger")
+manage_dirs_pattern(telepathy_logger_t, telepathy_logger_xdg_data_t, telepathy_logger_xdg_data_t)
+manage_files_pattern(telepathy_logger_t, telepathy_logger_xdg_data_t, telepathy_logger_xdg_data_t)
+# gnome_data_filetrans(telepathy_logger_t, telepathy_logger_xdg_data_t, dir, "TpLogger")
 
 files_read_usr_files(telepathy_logger_t)
 files_search_pids(telepathy_logger_t)
@@ -216,15 +216,15 @@ manage_dirs_pattern(telepathy_mission_control_t, telepathy_mission_control_home_
 manage_files_pattern(telepathy_mission_control_t, telepathy_mission_control_home_t, telepathy_mission_control_home_t)
 userdom_user_home_dir_filetrans(telepathy_mission_control_t, telepathy_mission_control_home_t, dir, ".mission-control")
 
-manage_dirs_pattern(telepathy_mission_control_t, telepathy_mission_control_data_home_t, telepathy_mission_control_data_home_t)
-manage_files_pattern(telepathy_mission_control_t, telepathy_mission_control_data_home_t, telepathy_mission_control_data_home_t)
-filetrans_pattern(telepathy_mission_control_t, telepathy_data_home_t, telepathy_mission_control_data_home_t, dir, "mission-control")
+manage_dirs_pattern(telepathy_mission_control_t, telepathy_mission_control_xdg_data_t, telepathy_mission_control_xdg_data_t)
+manage_files_pattern(telepathy_mission_control_t, telepathy_mission_control_xdg_data_t, telepathy_mission_control_xdg_data_t)
+filetrans_pattern(telepathy_mission_control_t, telepathy_xdg_data_t, telepathy_mission_control_xdg_data_t, dir, "mission-control")
 
-manage_files_pattern(telepathy_mission_control_t, telepathy_mission_control_cache_home_t, telepathy_mission_control_cache_home_t)
-# gnome_cache_filetrans(telepathy_mission_control_t, telepathy_mission_control_cache_home_t, file, ".mc_connections")
+manage_files_pattern(telepathy_mission_control_t, telepathy_mission_control_xdg_cache_t, telepathy_mission_control_xdg_cache_t)
+# gnome_cache_filetrans(telepathy_mission_control_t, telepathy_mission_control_xdg_cache_t, file, ".mc_connections")
 
-manage_dirs_pattern(telepathy_mission_control_t, telepathy_gabble_cache_home_t, telepathy_gabble_cache_home_t)
-manage_files_pattern(telepathy_mission_control_t, telepathy_gabble_cache_home_t, telepathy_gabble_cache_home_t)
+manage_dirs_pattern(telepathy_mission_control_t, telepathy_gabble_xdg_cache_t, telepathy_gabble_xdg_cache_t)
+manage_files_pattern(telepathy_mission_control_t, telepathy_gabble_xdg_cache_t, telepathy_gabble_xdg_cache_t)
 
 dev_read_rand(telepathy_mission_control_t)
 
@@ -461,11 +461,11 @@ optional_policy(`
 allow telepathy_domain self:process { getsched signal sigkill };
 allow telepathy_domain self:fifo_file rw_fifo_file_perms;
 
-manage_dirs_pattern(telepathy_domain, telepathy_cache_home_t, telepathy_cache_home_t)
-# gnome_cache_filetrans(telepathy_domain, telepathy_cache_home_t, dir, "telepathy")
+manage_dirs_pattern(telepathy_domain, telepathy_xdg_cache_t, telepathy_xdg_cache_t)
+xdg_cache_filetrans(telepathy_domain, telepathy_xdg_cache_t, dir, "telepathy")
 
-manage_dirs_pattern(telepathy_domain, telepathy_data_home_t, telepathy_data_home_t)
-# gnome_data_filetrans(telepathy_domain, telepathy_data_home_t, dir, "telepathy")
+manage_dirs_pattern(telepathy_domain, telepathy_xdg_data_t, telepathy_xdg_data_t)
+xdg_data_filetrans(telepathy_domain, telepathy_xdg_data_t, dir, "telepathy")
 
 dev_read_urand(telepathy_domain)
 
