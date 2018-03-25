@@ -47,6 +47,15 @@ type gnome_keyring_tmp_t;
 userdom_user_tmp_file(gnome_keyring_tmp_t)
 userdom_user_runtime_content(gnome_keyring_tmp_t)
 
+type gnome_xdg_cache_t;
+xdg_cache_content(gnome_xdg_cache_t)
+
+type gnome_xdg_config_t;
+xdg_config_content(gnome_xdg_config_t)
+
+type gnome_xdg_data_t;
+xdg_data_content(gnome_xdg_data_t)
+
 type gstreamer_orcexec_t;
 application_executable_file(gstreamer_orcexec_t)
 userdom_user_runtime_content(gstreamer_orcexec_t)
@@ -92,6 +101,18 @@ userdom_user_home_dir_filetrans(gconfd_t, gconf_home_t, dir)
 manage_dirs_pattern(gconfd_t, gconf_tmp_t, gconf_tmp_t)
 manage_files_pattern(gconfd_t, gconf_tmp_t, gconf_tmp_t)
 userdom_user_tmp_filetrans(gconfd_t, gconf_tmp_t, { dir file })
+
+manage_dirs_pattern(gconfd_t, gnome_xdg_cache_t, gnome_xdg_cache_t)
+manage_files_pattern(gconfd_t, gnome_xdg_cache_t, gnome_xdg_cache_t)
+xdg_cache_filetrans(gconfd_t, gnome_xdg_cache_t, dir)
+
+manage_dirs_pattern(gconfd_t, gnome_xdg_config_t, gnome_xdg_config_t)
+manage_files_pattern(gconfd_t, gnome_xdg_config_t, gnome_xdg_config_t)
+xdg_config_filetrans(gconfd_t, gnome_xdg_config_t, dir)
+
+manage_dirs_pattern(gconfd_t, gnome_xdg_data_t, gnome_xdg_data_t)
+manage_files_pattern(gconfd_t, gnome_xdg_data_t, gnome_xdg_data_t)
+xdg_data_filetrans(gconfd_t, gnome_xdg_data_t, dir)
 
 # for /proc/filesystems
 kernel_read_system_state(gconfd_t)
@@ -146,6 +167,19 @@ manage_dirs_pattern(gkeyringd_domain, gnome_keyring_tmp_t, gnome_keyring_tmp_t)
 manage_sock_files_pattern(gkeyringd_domain, gnome_keyring_tmp_t, gnome_keyring_tmp_t)
 files_tmp_filetrans(gkeyringd_domain, gnome_keyring_tmp_t, dir)
 userdom_user_runtime_filetrans(gkeyringd_domain, gnome_keyring_tmp_t, dir)
+
+manage_dirs_pattern(gkeyringd_domain, gnome_xdg_cache_t, gnome_xdg_cache_t)
+manage_files_pattern(gkeyringd_domain, gnome_xdg_cache_t, gnome_xdg_cache_t)
+manage_sock_files_pattern(gkeyringd_domain, gnome_xdg_cache_t, gnome_xdg_cache_t)
+xdg_cache_filetrans(gkeyringd_domain, gnome_xdg_cache_t, dir)
+
+manage_dirs_pattern(gkeyringd_domain, gnome_xdg_config_t, gnome_xdg_config_t)
+manage_files_pattern(gkeyringd_domain, gnome_xdg_config_t, gnome_xdg_config_t)
+xdg_config_filetrans(gkeyringd_domain, gnome_xdg_config_t, dir)
+
+manage_dirs_pattern(gkeyringd_domain, gnome_xdg_data_t, gnome_xdg_data_t)
+manage_files_pattern(gkeyringd_domain, gnome_xdg_data_t, gnome_xdg_data_t)
+xdg_data_filetrans(gkeyringd_domain, gnome_xdg_data_t, dir)
 
 kernel_read_crypto_sysctls(gkeyringd_domain)
 kernel_read_kernel_sysctls(gkeyringd_domain)

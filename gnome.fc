@@ -1,9 +1,14 @@
+HOME_DIR/\.cache/dconf(/.*)?	gen_context(system_u:object_r:gnome_xdg_cache_t,s0)
+HOME_DIR/\.cache/keyring-.*	gen_context(system_u:object_r:gnome_xdg_cache_t,s0)
+HOME_DIR/\.config/dconf(/.*)?	gen_context(system_u:object_r:gnome_xdg_config_t,s0)
+HOME_DIR/\.config/gtk-.*	gen_context(system_u:object_r:gnome_xdg_config_t,s0)
 HOME_DIR/\.gconf(/.*)?	gen_context(system_u:object_r:gconf_home_t,s0)
 HOME_DIR/\.gconfd(/.*)?	gen_context(system_u:object_r:gconf_home_t,s0)
 HOME_DIR/\.gnome(/.*)?	gen_context(system_u:object_r:gnome_home_t,s0)
 HOME_DIR/\.gnome2(/.*)?	gen_context(system_u:object_r:gnome_home_t,s0)
 HOME_DIR/\.gnome2/keyrings(/.*)?	gen_context(system_u:object_r:gnome_keyring_home_t,s0)
 HOME_DIR/\.gnome2_private(/.*)?	gen_context(system_u:object_r:gnome_home_t,s0)
+HOME_DIR/\.local/share/keyrings(/.*)?	gen_context(system_u:object_r:gnome_xdg_data_t,s0)
 
 HOME_DIR/orcexec\..*	gen_context(system_u:object_r:gstreamer_orcexec_t,s0)
 
