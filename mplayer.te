@@ -84,9 +84,10 @@ userdom_use_user_terminals(mencoder_t)
 userdom_manage_user_tmp_dirs(mencoder_t)
 userdom_manage_user_tmp_files(mencoder_t)
 
-userdom_manage_user_home_content_dirs(mencoder_t)
-userdom_manage_user_home_content_files(mencoder_t)
-userdom_user_home_dir_filetrans_user_home_content(mencoder_t, { dir file })
+userdom_user_content_access_template(mplayer_mencoder, mencoder_t)
+
+xdg_manage_music(mencoder_t)
+xdg_manage_videos(mencoder_t)
 
 ifndef(`enable_mls',`
 	fs_list_dos(mencoder_t)
@@ -207,11 +208,12 @@ userdom_manage_user_tmp_files(mplayer_t)
 userdom_tmp_filetrans_user_tmp(mplayer_t, { dir file })
 userdom_user_runtime_filetrans_user_tmp(mplayer_t, { dir file })
 
-userdom_manage_user_home_content_dirs(mplayer_t)
-userdom_manage_user_home_content_files(mplayer_t)
-userdom_user_home_dir_filetrans_user_home_content(mplayer_t, { dir file })
+userdom_user_content_access_template(mplayer, mplayer_t)
 
 userdom_write_user_tmp_sockets(mplayer_t)
+
+xdg_read_music(mplayer_t)
+xdg_read_videos(mplayer_t)
 
 xserver_user_x_domain_template(mplayer, mplayer_t, mplayer_tmpfs_t)
 
