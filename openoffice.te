@@ -94,17 +94,13 @@ sysnet_dns_name_resolve(ooffice_t)
 
 userdom_dontaudit_exec_user_home_content_files(ooffice_t)
 userdom_dontaudit_manage_user_tmp_dirs(ooffice_t)
-
-userdom_read_user_tmp_files(ooffice_t)
-userdom_manage_user_home_content_dirs(ooffice_t)
-userdom_manage_user_home_content_files(ooffice_t)
-userdom_manage_user_home_content_symlinks(ooffice_t)
-userdom_user_home_dir_filetrans_user_home_content(ooffice_t, { dir file lnk_file fifo_file sock_file })
-
 userdom_manage_user_tmp_dirs(ooffice_t)
 userdom_manage_user_tmp_sockets(ooffice_t)
-
 userdom_use_inherited_user_terminals(ooffice_t)
+
+userdom_user_content_access_template(openoffice, ooffice_t)
+
+xdg_manage_documents(ooffice_t)
 
 tunable_policy(`openoffice_allow_update',`
 	corenet_tcp_connect_http_port(ooffice_t)
