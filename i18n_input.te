@@ -5,6 +5,13 @@ policy_module(i18n_input, 1.12.0)
 # Declarations
 #
 
+## <desc>
+##	<p>
+##	Grant the i18n_input domains read access to generic user content
+##	</p>
+## </desc>
+gen_tunable(`i18n_input_read_generic_user_content', true)
+
 type i18n_input_t;
 type i18n_input_exec_t;
 init_daemon_domain(i18n_input_t, i18n_input_exec_t)
@@ -79,7 +86,22 @@ logging_send_syslog_msg(i18n_input_t)
 miscfiles_read_localization(i18n_input_t)
 
 userdom_dontaudit_use_unpriv_user_fds(i18n_input_t)
-userdom_read_user_home_content_files(i18n_input_t)
+
+tunable_policy(`i18n_input_read_generic_user_content',`
+	userdom_list_user_tmp(i18n_input_t)
+	userdom_list_user_home_content(i18n_input_t)
+	userdom_read_user_home_content_files(i18n_input_t)
+	userdom_read_user_home_content_symlinks(i18n_input_t)
+	userdom_read_user_tmp_files(i18n_input_t)
+',`
+	files_dontaudit_list_home(i18n_input_t)
+	files_dontaudit_list_tmp(i18n_input_t)
+
+	userdom_dontaudit_list_user_home_dirs(i18n_input_t)
+	userdom_dontaudit_list_user_tmp(i18n_input_t)
+	userdom_dontaudit_read_user_home_content_files(i18n_input_t)
+	userdom_dontaudit_read_user_tmp_files(i18n_input_t)
+')
 
 tunable_policy(`use_nfs_home_dirs',`
 	fs_read_nfs_files(i18n_input_t)
