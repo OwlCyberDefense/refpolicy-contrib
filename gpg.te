@@ -143,8 +143,8 @@ userdom_use_user_terminals(gpg_t)
 
 userdom_manage_user_tmp_dirs(gpg_t)
 userdom_manage_user_tmp_files(gpg_t)
-userdom_manage_user_home_content_files(gpg_t)
-userdom_user_home_dir_filetrans_user_home_content(gpg_t, file)
+
+userdom_user_content_access_template(gpg, gpg_t)
 
 tunable_policy(`use_nfs_home_dirs',`
 	fs_manage_nfs_dirs(gpg_t)
@@ -367,6 +367,8 @@ miscfiles_read_fonts(gpg_pinentry_t)
 miscfiles_read_localization(gpg_pinentry_t)
 
 userdom_use_user_terminals(gpg_pinentry_t)
+
+xdg_read_data_files(gpg_pinentry_t)
 
 tunable_policy(`use_nfs_home_dirs',`
 	fs_read_nfs_files(gpg_pinentry_t)
