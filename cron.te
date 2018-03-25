@@ -187,8 +187,6 @@ seutil_read_config(crontab_domain)
 userdom_manage_user_tmp_dirs(crontab_domain)
 userdom_manage_user_tmp_files(crontab_domain)
 userdom_use_user_terminals(crontab_domain)
-userdom_read_user_home_content_files(crontab_domain)
-userdom_read_user_home_content_symlinks(crontab_domain)
 
 tunable_policy(`fcron_crond',`
 	dontaudit crontab_domain crond_t:process signal;
@@ -711,15 +709,15 @@ seutil_read_config(cronjob_t)
 
 miscfiles_read_localization(cronjob_t)
 
-userdom_manage_user_tmp_files(cronjob_t)
-userdom_manage_user_tmp_symlinks(cronjob_t)
-userdom_manage_user_tmp_pipes(cronjob_t)
-userdom_manage_user_tmp_sockets(cronjob_t)
 userdom_exec_user_home_content_files(cronjob_t)
-userdom_manage_user_home_content_files(cronjob_t)
-userdom_manage_user_home_content_symlinks(cronjob_t)
-userdom_manage_user_home_content_pipes(cronjob_t)
-userdom_manage_user_home_content_sockets(cronjob_t)
+userdom_user_content_access_template(cron, { cronjob_t crontab_domain })
+
+tunable_policy(`cron_manage_generic_user_content',`
+	userdom_manage_user_tmp_pipes(cronjob_t)
+	userdom_manage_user_tmp_sockets(cronjob_t)
+	userdom_manage_user_home_content_pipes(cronjob_t)
+	userdom_manage_user_home_content_sockets(cronjob_t)
+')
 
 tunable_policy(`cron_userdomain_transition',`
 	dontaudit cronjob_t crond_t:fd use;
