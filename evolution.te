@@ -105,6 +105,15 @@ typealias evolution_webcal_tmpfs_t alias { user_evolution_webcal_tmpfs_t staff_e
 typealias evolution_webcal_tmpfs_t alias { auditadm_evolution_webcal_tmpfs_t secadm_evolution_webcal_tmpfs_t };
 userdom_user_tmpfs_file(evolution_webcal_tmpfs_t)
 
+type evolution_xdg_cache_t;
+xdg_cache_content(evolution_xdg_cache_t)
+
+type evolution_xdg_config_t;
+xdg_config_content(evolution_xdg_config_t)
+
+type evolution_xdg_data_t;
+xdg_data_content(evolution_xdg_data_t)
+
 ########################################
 #
 # Local policy
@@ -141,6 +150,18 @@ allow evolution_t { evolution_alarm_t evolution_server_t }:file read_file_perms;
 stream_connect_pattern(evolution_t, evolution_alarm_orbit_tmp_t, evolution_alarm_orbit_tmp_t, evolution_alarm_t)
 stream_connect_pattern(evolution_t, evolution_exchange_orbit_tmp_t, evolution_exchange_orbit_tmp_t, evolution_exchange_t)
 stream_connect_pattern(evolution_t, evolution_server_orbit_tmp_t, evolution_server_orbit_tmp_t, evolution_server_t)
+
+manage_files_pattern(evolution_t, evolution_xdg_cache_t, evolution_xdg_cache_t)
+manage_dirs_pattern(evolution_t, evolution_xdg_cache_t, evolution_xdg_cache_t)
+xdg_cache_filetrans(evolution_t, evolution_xdg_cache_t, { dir file } )
+
+manage_files_pattern(evolution_t, evolution_xdg_config_t, evolution_xdg_config_t)
+manage_dirs_pattern(evolution_t, evolution_xdg_config_t, evolution_xdg_config_t)
+xdg_config_filetrans(evolution_t, evolution_xdg_config_t, { dir file } )
+
+manage_files_pattern(evolution_t, evolution_xdg_data_t, evolution_xdg_data_t)
+manage_dirs_pattern(evolution_t, evolution_xdg_data_t, evolution_xdg_data_t)
+xdg_data_filetrans(evolution_t, evolution_xdg_data_t, { dir file } )
 
 can_exec(evolution_t, { evolution_alarm_exec_t evolution_server_exec_t })
 
@@ -201,6 +222,7 @@ udev_read_state(evolution_t)
 
 userdom_use_user_terminals(evolution_t)
 
+
 tunable_policy(`evolution_manage_user_certs',`
 	userdom_manage_user_certs(evolution_t)
 ',`
@@ -208,16 +230,13 @@ tunable_policy(`evolution_manage_user_certs',`
 	userdom_read_user_certs(evolution_t)
 ')
 
-userdom_manage_user_tmp_dirs(evolution_t)
-userdom_manage_user_tmp_files(evolution_t)
-
-userdom_manage_user_home_content_dirs(evolution_t)
-userdom_manage_user_home_content_files(evolution_t)
-userdom_user_home_dir_filetrans_user_home_content(evolution_t, { dir file })
-
 userdom_write_user_tmp_sockets(evolution_t)
 
+userdom_user_content_access_template(evolution, evolution_t)
+
 mta_read_config(evolution_t)
+
+xdg_manage_downloads(evolution_t)
 
 xserver_user_x_domain_template(evolution, evolution_t, evolution_tmpfs_t)
 xserver_read_xdm_tmp_files(evolution_t)
