@@ -99,7 +99,7 @@ interface(`ccs_admin',`
 	gen_require(`
 		type ccs_t, ccs_initrc_exec_t, cluster_conf_t;
 		type ccs_var_lib_t, ccs_var_log_t;
-		type ccs_var_run_t, ccs_tmp_t, ccs_conf_t;
+		type ccs_var_run_t, ccs_tmp_t;
 	')
 
 	allow $1 ccs_t:process { ptrace signal_perms };
@@ -108,7 +108,7 @@ interface(`ccs_admin',`
 	init_startstop_service($1, $2, ccs_t, ccs_initrc_exec_t)
 
 	files_search_etc($1)
-	admin_pattern($1, ccs_conf_t)
+	admin_pattern($1, cluster_conf_t)
 
 	files_search_var_lib($1)
 	admin_pattern($1, ccs_var_lib_t)

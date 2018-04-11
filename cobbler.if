@@ -154,8 +154,8 @@ interface(`cobbler_manage_lib_files',`
 interface(`cobbler_admin',`
 	gen_require(`
 		type cobblerd_t, cobbler_var_lib_t, cobbler_var_log_t;
-		type cobbler_etc_t, cobblerd_initrc_exec_t, httpd_cobbler_content_t;
-		type httpd_cobbler_content_ra_t, httpd_cobbler_content_rw_t, cobbler_tmp_t;
+		type cobbler_etc_t, cobblerd_initrc_exec_t, cobbler_content_t;
+		type cobbler_tmp_t;
 	')
 
 	allow $1 cobblerd_t:process { ptrace signal_perms };
@@ -176,5 +176,5 @@ interface(`cobbler_admin',`
 	admin_pattern($1, cobbler_var_log_t)
 
 	apache_search_sys_content($1)
-	admin_pattern($1, { httpd_cobbler_content_t httpd_cobbler_content_ra_t httpd_cobbler_content_rw_t })
+	admin_pattern($1, cobbler_content_t)
 ')

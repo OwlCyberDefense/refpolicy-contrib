@@ -336,7 +336,7 @@ interface(`sssd_admin',`
 	gen_require(`
 		type sssd_t, sssd_public_t, sssd_initrc_exec_t;
 		type sssd_var_lib_t, sssd_var_run_t, sssd_conf_t;
-		type sssd_log_t;
+		type sssd_var_log_t;
 	')
 
 	allow $1 sssd_t:process { ptrace signal_perms };
@@ -354,5 +354,5 @@ interface(`sssd_admin',`
 	admin_pattern($1, sssd_var_run_t)
 
 	logging_search_logs($1)
-	admin_pattern($1, sssd_log_t)
+	admin_pattern($1, sssd_var_log_t)
 ')
