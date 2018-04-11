@@ -12,11 +12,13 @@
 #
 interface(`rabbitmq_domtrans',`
 	gen_require(`
-		type rabbitmq_t, rabbitmq_exec_t;
+		type rabbitmq_epmd_t, rabbitmq_epmd_exec_t;
+		type rabbitmq_beam_t, rabbitmq_beam_exec_t;
 	')
 
 	corecmd_search_bin($1)
-	domtrans_pattern($1, rabbitmq_exec_t, rabbitmq_t)
+	domtrans_pattern($1, rabbitmq_epmd_exec_t, rabbitmq_epmd_t)
+	domtrans_pattern($1, rabbitmq_beam_exec_t, rabbitmq_beam_t)
 ')
 
 ########################################

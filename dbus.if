@@ -248,7 +248,7 @@ interface(`dbus_send_all_session_bus',`
 		class dbus send_msg;
 	')
 
-	allow $1 dbus_session_bus_type:dbus send_msg;
+	allow $1 session_bus_type:dbus send_msg;
 ')
 
 #######################################
