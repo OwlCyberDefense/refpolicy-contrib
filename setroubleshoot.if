@@ -133,6 +133,11 @@ interface(`setroubleshoot_dbus_chat_fixit',`
 ##	Domain allowed access.
 ##	</summary>
 ## </param>
+## <param name="role" unused="true">
+##	<summary>
+##	Role allowed access.
+##	</summary>
+## </param>
 ## <rolecap/>
 #
 interface(`setroubleshoot_admin',`
