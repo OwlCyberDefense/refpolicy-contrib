@@ -199,9 +199,6 @@ corenet_sendrecv_boinc_client_packets(boinc_project_t)
 corenet_tcp_connect_boinc_port(boinc_project_t)
 corenet_tcp_sendrecv_boinc_port(boinc_project_t)
 
-dev_getattr_input_dev(boinc_t)
-dev_getattr_mouse_dev(boinc_t)
-
 files_dontaudit_search_home(boinc_project_t)
 
 term_getattr_ptmx(boinc_t)
