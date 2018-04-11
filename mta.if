@@ -530,6 +530,25 @@ interface(`mta_sendmail_exec',`
 
 ########################################
 ## <summary>
+##	Make sendmail usable as an entry
+##      point for the domain.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain to be entered.
+##	</summary>
+## </param>
+#
+interface(`mta_sendmail_entry_point',`
+	gen_require(`
+		type sendmail_exec_t;
+	')
+
+	domain_entry_file($1, sendmail_exec_t)
+')
+
+########################################
+## <summary>
 ##	Read mail server configuration content.
 ## </summary>
 ## <param name="domain">

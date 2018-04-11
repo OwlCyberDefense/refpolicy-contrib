@@ -32,7 +32,8 @@ mta_mailserver_sender(sendmail_t)
 role sendmail_roles types sendmail_t;
 
 type unconfined_sendmail_t;
-application_domain(unconfined_sendmail_t, sendmail_exec_t)
+application_type(unconfined_sendmail_t)
+mta_sendmail_entry_point(unconfined_sendmail_t)
 role sendmail_unconfined_roles types unconfined_sendmail_t;
 
 ########################################
