@@ -247,7 +247,7 @@ interface(`rsync_etc_filetrans_config',`
 ##	Domain allowed access.
 ##	</summary>
 ## </param>
-## <param name="role">
+## <param name="role" unused="true">
 ##	<summary>
 ##	Role allowed access.
 ##	</summary>

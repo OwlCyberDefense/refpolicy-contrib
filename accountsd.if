@@ -129,7 +129,7 @@ interface(`accountsd_manage_lib_files',`
 ##	Domain allowed access.
 ##	</summary>
 ## </param>
-## <param name="role">
+## <param name="role" unused="true">
 ##	<summary>
 ##	Role allowed access.
 ##	</summary>
