@@ -92,7 +92,6 @@ optional_policy(`
 ')
 
 optional_policy(`
-	xserver_manage_xdm_spool_files(plymouthd_t)
 	xserver_read_xdm_state(plymouthd_t)
 ')
 
