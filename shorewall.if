@@ -62,38 +62,28 @@ interface(`shorewall_read_config',`
 ## <summary>
 ##	Read shorewall pid files.
 ## </summary>
-## <param name="domain">
+## <param name="domain" unused="true">
 ##	<summary>
 ##	Domain allowed access.
 ##	</summary>
 ## </param>
 #
 interface(`shorewall_read_pid_files',`
-	gen_require(`
-		type shorewall_var_run_t;
-	')
-
-	files_search_pids($1)
-	read_files_pattern($1, shorewall_var_run_t, shorewall_var_run_t)
+	refpolicywarn(`$0($*) has been deprecated')
 ')
 
 #######################################
 ## <summary>
 ##	Read and write shorewall pid files.
 ## </summary>
-## <param name="domain">
+## <param name="domain" unused="true">
 ##	<summary>
 ##	Domain allowed access.
 ##	</summary>
 ## </param>
 #
 interface(`shorewall_rw_pid_files',`
-	gen_require(`
-		type shorewall_var_run_t;
-	')
-
-	files_search_pids($1)
-	rw_files_pattern($1, shorewall_var_run_t, shorewall_var_run_t)
+	refpolicywarn(`$0($*) has been deprecated')
 ')
 
 ######################################
