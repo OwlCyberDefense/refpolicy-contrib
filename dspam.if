@@ -32,12 +32,12 @@ interface(`dspam_domtrans',`
 #
 interface(`dspam_stream_connect',`
 	gen_require(`
-		type dspam_t, dspam_var_run_t, dspam_tmp_t;
+		type dspam_t, dspam_var_run_t;
 	')
 
 	files_search_pids($1)
 	files_search_tmp($1)
-	stream_connect_pattern($1, { dspam_tmp_t dspam_var_run_t }, { dspam_tmp_t dspam_var_run_t }, dspam_t)
+	stream_connect_pattern($1, dspam_var_run_t, dspam_var_run_t, dspam_t)
 ')
 
 ########################################
