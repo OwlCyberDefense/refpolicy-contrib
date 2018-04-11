@@ -12,7 +12,7 @@ apache_content_template(mojomojo)
 # Local policy
 #
 
-allow httpd_mojomojo_script_t httpd_t:unix_stream_socket rw_stream_socket_perms;
+apache_rw_stream_sockets(httpd_mojomojo_script_t)
 
 corenet_sendrecv_smtp_client_packets(httpd_mojomojo_script_t)
 corenet_tcp_connect_smtp_port(httpd_mojomojo_script_t)

@@ -373,6 +373,25 @@ interface(`apache_dontaudit_rw_stream_sockets',`
 
 ########################################
 ## <summary>
+##	Read and write httpd unix domain
+##      stream sockets.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`apache_rw_stream_sockets',`
+	gen_require(`
+		type httpd_t;
+	')
+
+	allow $1 httpd_t:unix_stream_socket rw_stream_socket_perms;
+')
+
+########################################
+## <summary>
 ##	Do not audit attempts to read and
 ##	write httpd TCP sockets.
 ## </summary>
