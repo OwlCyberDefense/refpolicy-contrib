@@ -394,7 +394,7 @@ optional_policy(`
 	inetd_tcp_service_domain(ftpd_t, ftpd_exec_t)
 
 	optional_policy(`
-		tcpd_domtrans(tcpd_t)
+		tcpd_domtrans(ftpd_t)
 	')
 ')
 

@@ -245,7 +245,7 @@ interface(`wm_application_domain',`
 #
 interface(`wm_write_pipes',`
 	gen_require(`
-		type $1_t;
+		type $1_wm_t;
 	')
 
 	allow $2 $1_wm_t:fifo_file write;

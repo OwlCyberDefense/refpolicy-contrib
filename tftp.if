@@ -105,10 +105,10 @@ interface(`tftp_manage_config_files',`
 #
 interface(`tftp_etc_filetrans_config',`
 	gen_require(`
-		type tftp_conf_t;
+		type tftpd_conf_t;
 	')
 
-	files_etc_filetrans($1, tftp_conf_t, $2, $3)
+	files_etc_filetrans($1, tftpd_conf_t, $2, $3)
 ')
 
 ########################################

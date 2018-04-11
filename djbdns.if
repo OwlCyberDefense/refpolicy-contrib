@@ -71,8 +71,8 @@ interface(`djbdns_search_tinydns_keys',`
 #
 interface(`djbdns_link_tinydns_keys',`
 	gen_require(`
-		type djbdns_tinydn_t;
+		type djbdns_tinydns_t;
 	')
 
-	allow $1 djbdns_tinydn_t:key link;
+	allow $1 djbdns_tinydns_t:key link;
 ')
