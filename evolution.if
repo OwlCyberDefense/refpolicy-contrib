@@ -224,5 +224,5 @@ interface(`evolution_domtrans',`
 	')
 
 	corecmd_search_bin($1)
-	domtrans_pattern($1, evolution_exec_t, evolution_t);
+	domtrans_pattern($1, evolution_exec_t, evolution_t)
 ')

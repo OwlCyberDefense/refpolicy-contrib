@@ -26,7 +26,7 @@ type qemu_unit_t;
 init_unit_file(qemu_unit_t)
 
 type qemu_var_run_t;
-files_pid_file(qemu_var_run_t);
+files_pid_file(qemu_var_run_t)
 
 ########################################
 #
