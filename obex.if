@@ -24,7 +24,7 @@
 template(`obex_role_template',`
 	gen_require(`
 		attribute_role obex_roles;
-		type obex_t, obex_exec_exec_t;
+		type obex_t, obex_exec_t;
 	')
 
 	########################################
