@@ -471,6 +471,7 @@ allow virtd_t self:tcp_socket { accept listen };
 allow virtd_t self:tun_socket { create_socket_perms relabelfrom relabelto };
 allow virtd_t self:rawip_socket create_socket_perms;
 allow virtd_t self:packet_socket create_socket_perms;
+allow virtd_t self:netlink_generic_socket create_socket_perms;
 allow virtd_t self:netlink_kobject_uevent_socket create_socket_perms;
 allow virtd_t self:netlink_route_socket nlmsg_write;
 
@@ -489,6 +490,7 @@ domtrans_pattern(virtd_t, virtd_lxc_exec_t, virtd_lxc_t)
 
 manage_dirs_pattern(virtd_t, virt_cache_t, virt_cache_t)
 manage_files_pattern(virtd_t, virt_cache_t, virt_cache_t)
+files_var_filetrans(virtd_t, virt_cache_t, { file dir })
 
 manage_dirs_pattern(virtd_t, virt_content_t, virt_content_t)
 manage_files_pattern(virtd_t, virt_content_t, virt_content_t)
