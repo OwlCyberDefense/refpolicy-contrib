@@ -109,6 +109,7 @@ init_dontaudit_rw_utmp(user_mail_domain)
 
 logging_send_syslog_msg(user_mail_domain)
 
+miscfiles_read_all_certs(user_mail_domain)
 miscfiles_read_localization(user_mail_domain)
 
 tunable_policy(`use_samba_home_dirs',`
