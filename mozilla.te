@@ -108,6 +108,7 @@ manage_lnk_files_pattern(mozilla_t, mozilla_tmpfs_t, mozilla_tmpfs_t)
 manage_fifo_files_pattern(mozilla_t, mozilla_tmpfs_t, mozilla_tmpfs_t)
 manage_sock_files_pattern(mozilla_t, mozilla_tmpfs_t, mozilla_tmpfs_t)
 fs_tmpfs_filetrans(mozilla_t, mozilla_tmpfs_t, { file lnk_file sock_file fifo_file })
+allow mozilla_t mozilla_plugin_tmpfs_t:file map;
 
 allow mozilla_t mozilla_plugin_rw_t:dir list_dir_perms;
 allow mozilla_t mozilla_plugin_rw_t:file read_file_perms;
@@ -347,6 +348,7 @@ allow mozilla_plugin_t mozilla_t:sem create_sem_perms;
 manage_dirs_pattern(mozilla_plugin_t, { mozilla_home_t mozilla_plugin_home_t }, { mozilla_home_t mozilla_plugin_home_t })
 manage_files_pattern(mozilla_plugin_t, { mozilla_home_t mozilla_plugin_home_t }, mozilla_plugin_home_t)
 manage_lnk_files_pattern(mozilla_plugin_t, { mozilla_home_t mozilla_plugin_home_t }, mozilla_plugin_home_t)
+allow mozilla_plugin_t mozilla_home_t:file map;
 
 userdom_user_home_dir_filetrans(mozilla_plugin_t, mozilla_home_t, dir, ".galeon")
 userdom_user_home_dir_filetrans(mozilla_plugin_t, mozilla_home_t, dir, ".mozilla")
@@ -369,6 +371,8 @@ manage_files_pattern(mozilla_plugin_t, mozilla_plugin_tmp_t, mozilla_plugin_tmp_
 manage_fifo_files_pattern(mozilla_plugin_t, mozilla_plugin_tmp_t, mozilla_plugin_tmp_t)
 files_tmp_filetrans(mozilla_plugin_t, mozilla_plugin_tmp_t, { dir file fifo_file })
 userdom_user_tmp_filetrans(mozilla_plugin_t, mozilla_plugin_tmp_t, { dir file fifo_file })
+
+allow mozilla_plugin_t mozilla_tmp_t:file rw_file_perms;
 
 manage_files_pattern(mozilla_plugin_t, mozilla_plugin_tmpfs_t, mozilla_plugin_tmpfs_t)
 manage_lnk_files_pattern(mozilla_plugin_t, mozilla_plugin_tmpfs_t, mozilla_plugin_tmpfs_t)
@@ -479,6 +483,7 @@ files_exec_usr_files(mozilla_plugin_t)
 files_list_mnt(mozilla_plugin_t)
 files_read_config_files(mozilla_plugin_t)
 files_read_usr_files(mozilla_plugin_t)
+files_map_usr_files(mozilla_plugin_t)
 
 fs_getattr_all_fs(mozilla_plugin_t)
 # fs_read_hugetlbfs_files(mozilla_plugin_t)
