@@ -114,7 +114,7 @@ init_daemon_domain(nmbd_t, nmbd_exec_t)
 
 type samba_var_run_t;
 typealias samba_var_run_t alias { nmbd_var_run_t smbd_var_run_t };
-files_pid_file(samba_var_run_t)
+init_daemon_pid_file(samba_var_run_t, dir, "samba")
 
 type samba_etc_t;
 files_config_file(samba_etc_t)
