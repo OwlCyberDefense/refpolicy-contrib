@@ -83,6 +83,7 @@ domain_use_interactive_fds(colord_t)
 
 files_list_mnt(colord_t)
 files_read_usr_files(colord_t)
+files_map_usr_files(colord_t)
 
 fs_getattr_noxattr_fs(colord_t)
 fs_getattr_tmpfs(colord_t)
