@@ -123,6 +123,25 @@ interface(`gpg_spec_domtrans',`
 	domain_auto_transition_pattern($1, gpg_exec_t, $2)
 ')
 
+########################################
+## <summary>
+##	Execute the gpg-agent in the caller domain.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`gpg_exec_agent',`
+	gen_require(`
+		type gpg_agent_exec_t;
+	')
+
+	corecmd_search_bin($1)
+	can_exec($1, gpg_agent_exec_t)
+')
+
 ######################################
 ## <summary>
 ##	Make gpg executable files an
